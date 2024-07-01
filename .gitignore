@@ -1,1 +1,15 @@
+# aatravel
+# Xcode
+*.xcworkspace
+*.xcuserdata
+*.xcuserstate
+DerivedData/
+.DS_Store
+.idea/
+
+# Swift Package Manager
+.build/
+Packages/
+
+
 */Pipfile.lock
