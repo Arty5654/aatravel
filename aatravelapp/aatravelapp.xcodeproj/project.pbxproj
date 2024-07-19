@@ -15,6 +15,7 @@
 		2A7C43312C32330600B40253 /* aatravelappUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7C43302C32330600B40253 /* aatravelappUITests.swift */; };
 		2A7C43332C32330600B40253 /* aatravelappUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7C43322C32330600B40253 /* aatravelappUITestsLaunchTests.swift */; };
 		2A7C43402C32332A00B40253 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7C433F2C32332A00B40253 /* Account.swift */; };
+		97E851E12C4A18410021BFB9 /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97E851E02C4A18410021BFB9 /* RegisterView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		2A7C43302C32330600B40253 /* aatravelappUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = aatravelappUITests.swift; sourceTree = "<group>"; };
 		2A7C43322C32330600B40253 /* aatravelappUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = aatravelappUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		2A7C433F2C32332A00B40253 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
+		97E851E02C4A18410021BFB9 /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +105,7 @@
 				2A7C43182C32330600B40253 /* Assets.xcassets */,
 				2A7C431A2C32330600B40253 /* aatravelapp.entitlements */,
 				2A7C431B2C32330600B40253 /* Preview Content */,
+				97E851E02C4A18410021BFB9 /* RegisterView.swift */,
 			);
 			path = aatravelapp;
 			sourceTree = "<group>";
@@ -263,6 +266,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2A7C43172C32330500B40253 /* ContentView.swift in Sources */,
+				97E851E12C4A18410021BFB9 /* RegisterView.swift in Sources */,
 				2A7C43152C32330500B40253 /* aatravelappApp.swift in Sources */,
 				2A7C43402C32332A00B40253 /* Account.swift in Sources */,
 			);
