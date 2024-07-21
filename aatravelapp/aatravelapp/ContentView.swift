@@ -12,15 +12,30 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-            List {
-                ForEach(accounts, id: \.self) { item in
-                    HStack {
-                        Image(systemName: "banknote").foregroundColor(.green)
-                        Text(item.name)
-                        Spacer()
-                        Text("\(item.balance)")
+            VStack {
+                List {
+                    ForEach(accounts, id: \.self) { item in
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Image(systemName: "person").foregroundColor(.blue)
+                                Text(item.email)
+                            }
+                            Text("Created at: \(item.created_at)")
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
+                        }
                     }
                 }
+                
+                NavigationLink(destination: RegisterView()) {
+                    Text("Register")
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.blue)
+                        .cornerRadius(10)
+                }
+                .padding()
             }
             .navigationTitle("Accounts")
             .onAppear(perform: loadAccount)
@@ -28,14 +43,13 @@ struct ContentView: View {
     }
     
     func loadAccount() {
-        guard let url = URL(string: "http://127.0.0.1:8000/api/account/") else {
+        guard let url = URL(string: "http://127.0.0.1:8000/api/accounts/") else {
             print("API is down")
             return
         }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.addValue("application/json", forHTTPHeaderField: "Accept")
-        request.addValue("Basic YXJ0ZW9tYXZldGlzc2lhbjpMb2xhaXMxMCE=", forHTTPHeaderField: "Authorization")
         
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let data = data {
@@ -53,4 +67,3 @@ struct ContentView: View {
 #Preview {
     ContentView()
 }
-

@@ -8,10 +8,8 @@
 import Foundation
 
 struct Account: Codable, Hashable {
-    var name: String
-    var category: String
-    var description: String
-    var wealth_type: String
-    var balance: Int
+    //var id: String
+    var email: String
+    var password: String
     var created_at: String
 }
