@@ -7,7 +7,25 @@
 		<key>aatravelapp.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>0</integer>
+			<integer>9</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>2A7C43102C32330500B40253</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>2A7C43212C32330600B40253</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>2A7C432B2C32330600B40253</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>
