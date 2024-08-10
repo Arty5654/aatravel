@@ -21,6 +21,7 @@
 		2A7C434B2C4E1E0500B40253 /* AppAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A7C434A2C4E1E0500B40253 /* AppAuth.framework */; };
 		2A8281F42C4E2C150024F3F6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2A8281F32C4E2C150024F3F6 /* GoogleService-Info.plist */; };
 		34E5397DE6AE42996AF3F45B /* Pods_aatravelapp_aatravelappUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 726A5F4E74F0431A0F12430B /* Pods_aatravelapp_aatravelappUITests.framework */; };
+		9786597E2C65C90E00DDDCD7 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9786597D2C65C90E00DDDCD7 /* HomeView.swift */; };
 		97E851E12C4A18410021BFB9 /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97E851E02C4A18410021BFB9 /* RegisterView.swift */; };
 		B640F474597EAE6D79C86029 /* Pods_aatravelapp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A60ED78594B0BB490100084D /* Pods_aatravelapp.framework */; };
 		FBB9B4C02E0CF7DD864F01DC /* Pods_aatravelappTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0642795FA1DCADB9D3136B71 /* Pods_aatravelappTests.framework */; };
@@ -68,6 +69,7 @@
 		71E3F7357F0B6F80B9A0286E /* Pods-aatravelapp-aatravelappUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aatravelapp-aatravelappUITests.release.xcconfig"; path = "Target Support Files/Pods-aatravelapp-aatravelappUITests/Pods-aatravelapp-aatravelappUITests.release.xcconfig"; sourceTree = "<group>"; };
 		726A5F4E74F0431A0F12430B /* Pods_aatravelapp_aatravelappUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_aatravelapp_aatravelappUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		80783D41956275E623836112 /* Pods-aatravelapp-aatravelappUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aatravelapp-aatravelappUITests.debug.xcconfig"; path = "Target Support Files/Pods-aatravelapp-aatravelappUITests/Pods-aatravelapp-aatravelappUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		9786597D2C65C90E00DDDCD7 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		97E851E02C4A18410021BFB9 /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
 		A60ED78594B0BB490100084D /* Pods_aatravelapp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_aatravelapp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF71FB37E23D25A0CAB8BFB9 /* Pods-aatravelapp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aatravelapp.debug.xcconfig"; path = "Target Support Files/Pods-aatravelapp/Pods-aatravelapp.debug.xcconfig"; sourceTree = "<group>"; };
@@ -130,6 +132,7 @@
 		2A7C43132C32330500B40253 /* aatravelapp */ = {
 			isa = PBXGroup;
 			children = (
+				9786597C2C65C8C300DDDCD7 /* Views */,
 				2A8281F72C4E2D360024F3F6 /* Info.plist */,
 				2A7C43142C32330500B40253 /* aatravelappApp.swift */,
 				2A7C433F2C32332A00B40253 /* Account.swift */,
@@ -167,6 +170,14 @@
 				2A7C43322C32330600B40253 /* aatravelappUITestsLaunchTests.swift */,
 			);
 			path = aatravelappUITests;
+			sourceTree = "<group>";
+		};
+		9786597C2C65C8C300DDDCD7 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				9786597D2C65C90E00DDDCD7 /* HomeView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		AF9D06FC08701A1B99D722F2 /* Frameworks */ = {
@@ -263,7 +274,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1520;
-				LastUpgradeCheck = 1520;
+				LastUpgradeCheck = 1540;
 				TargetAttributes = {
 					2A7C43102C32330500B40253 = {
 						CreatedOnToolsVersion = 15.2;
@@ -434,6 +445,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2A7C43472C4E188700B40253 /* GoogleSignIn.swift in Sources */,
+				9786597E2C65C90E00DDDCD7 /* HomeView.swift in Sources */,
 				2A7C43172C32330500B40253 /* ContentView.swift in Sources */,
 				97E851E12C4A18410021BFB9 /* RegisterView.swift in Sources */,
 				2A7C43152C32330500B40253 /* aatravelappApp.swift in Sources */,
@@ -509,6 +521,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -528,6 +541,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -570,6 +584,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -583,6 +598,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -599,6 +615,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"aatravelapp/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -638,6 +655,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"aatravelapp/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -675,6 +693,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				MACOSX_DEPLOYMENT_TARGET = 14.2;
@@ -698,6 +717,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				MACOSX_DEPLOYMENT_TARGET = 14.2;
@@ -720,6 +740,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				MACOSX_DEPLOYMENT_TARGET = 14.2;
@@ -742,6 +763,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				MACOSX_DEPLOYMENT_TARGET = 14.2;
