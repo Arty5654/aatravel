@@ -9,94 +9,92 @@ import SwiftUI
 
 struct HomeView: View {
     @State private var searchText = ""
+    @State private var selectedOption: String = "Explore"
 
     var body: some View {
-        VStack {
-            // Search Bar
-            SearchBar(text: $searchText)
-                .padding(.horizontal)
-                .padding(.top, 10)
-            
-            ScrollView {
-                VStack(spacing: 16) {
-                    // Gray box elements, 5 at the moment
-                    ForEach(0..<5) { _ in
-                        GrayBoxView()
-                            .padding(.horizontal)
+        TabView {
+            VStack {
+                
+                // Filter section
+                VStack {
+                    // Search Bar
+                    SearchBar(text: $searchText)
+                        .padding(.horizontal)
+                        .padding(.top, 8)
+                    
+                    // Following and Explore Options
+                    HStack(spacing: 16) {
+                        Spacer()
+                        Text("Following")
+                            .font(.headline)
+                            .foregroundColor(selectedOption == "Following" ? .primary : .gray)
+                            .underline(selectedOption == "Following")
+                            .onTapGesture {
+                                selectedOption = "Following"
+                            }
+                        Text("Explore")
+                            .font(.headline)
+                            .foregroundColor(selectedOption == "Explore" ? .primary : .gray)
+                            .underline(selectedOption == "Explore")
+                            .onTapGesture {
+                                selectedOption = "Explore"
+                            }
+                        Spacer()
                     }
+                    .padding(.vertical, 12)
                 }
-                .padding(.vertical)
+                .background(Color.white)
+                .shadow(color: .gray.opacity(0.1), radius: 1, x: 1, y: 2)
+
+                // Feed
+                ScrollView {
+                    VStack(spacing: 16) {
+                        // Gray box elements, 5 at the moment
+                        ForEach(0..<5) { _ in
+                            PostCardView()
+                                .padding(.horizontal)
+                        }
+                    }
+                    .padding(.vertical, 8)
+                }
             }
-        }
-    }
-}
-
-struct SearchBar: View {
-    @Binding var text: String
-
-    var body: some View {
-        HStack {
-            HStack {
-                Image(systemName: "magnifyingglass")
-                    .foregroundColor(.gray)
-                TextField("Explore Destinations!", text: $text)
-                    .padding(7)
-                    .padding(.leading, -5)  // Adjust padding to move text closer to the icon
-                    .background(Color(.systemGray6))
-                    .cornerRadius(10)
-            }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 5)
-            .background(Color(.systemGray6))
-            .cornerRadius(10)
-        }
-    }
-}
-
-struct GrayBoxView: View {
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
             
-            // Top bar with account name
-            HStack {
-                Text("Account Name")
-                    .font(.subheadline)
-                Spacer()
-                Image(systemName: "ellipsis")
-                    .foregroundColor(.gray)
+            .tabItem {
+                Image(systemName: "house")
+                    .renderingMode(.original)
+                Text("Explore")
             }
-            .padding([.horizontal], 4)
-
-            // Image (Gray Box)
-            RoundedRectangle(cornerRadius: 10)
-                .fill(Color.gray.opacity(0.3))
-                .frame(height: 400)
             
-            // Buttons below the image
-            HStack {
-                HStack(spacing: 8) {
+            // Add more tabs here
+            Text("Wishlists View")
+                .tabItem {
                     Image(systemName: "heart")
-                    Image(systemName: "message")
-                    Image(systemName: "paperplane")
+                    Text("Wishlists")
                 }
-                Spacer()
-            }
-            .font(.system(size: 24))
-            .padding([])
             
-            // Caption
-            Text("Creative captions effortlessly capture attention, conveying messages with concise brilliance.")
-                .font(.footnote)
+            Text("Trips View")
+                .tabItem {
+                    Image(systemName: "airplane")
+                    Text("Trips")
+                }
             
-            // View comments text
-            Text("View comments")
-                .font(.footnote)
-                .foregroundColor(.gray)
+            Text("Messages View")
+                .tabItem {
+                    Image(systemName: "message")
+                    Text("Messages")
+                }
+            
+            Text("Profile View")
+                .tabItem {
+                    Image(systemName: "person")
+                    Text("Profile")
+                }
         }
-        .padding(.bottom)
-    }
-}
+    } // end var: body
+} // end struct HomeView
 
 #Preview {
     HomeView()
 }
+
+

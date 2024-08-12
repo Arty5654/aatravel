@@ -22,6 +22,8 @@
 		2A8281F42C4E2C150024F3F6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2A8281F32C4E2C150024F3F6 /* GoogleService-Info.plist */; };
 		34E5397DE6AE42996AF3F45B /* Pods_aatravelapp_aatravelappUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 726A5F4E74F0431A0F12430B /* Pods_aatravelapp_aatravelappUITests.framework */; };
 		9786597E2C65C90E00DDDCD7 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9786597D2C65C90E00DDDCD7 /* HomeView.swift */; };
+		978659832C681F3D00DDDCD7 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 978659812C681ABB00DDDCD7 /* SearchBar.swift */; };
+		978659852C681FDF00DDDCD7 /* PostCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 978659842C681FDF00DDDCD7 /* PostCard.swift */; };
 		97E851E12C4A18410021BFB9 /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97E851E02C4A18410021BFB9 /* RegisterView.swift */; };
 		B640F474597EAE6D79C86029 /* Pods_aatravelapp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A60ED78594B0BB490100084D /* Pods_aatravelapp.framework */; };
 		FBB9B4C02E0CF7DD864F01DC /* Pods_aatravelappTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0642795FA1DCADB9D3136B71 /* Pods_aatravelappTests.framework */; };
@@ -70,6 +72,8 @@
 		726A5F4E74F0431A0F12430B /* Pods_aatravelapp_aatravelappUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_aatravelapp_aatravelappUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		80783D41956275E623836112 /* Pods-aatravelapp-aatravelappUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aatravelapp-aatravelappUITests.debug.xcconfig"; path = "Target Support Files/Pods-aatravelapp-aatravelappUITests/Pods-aatravelapp-aatravelappUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		9786597D2C65C90E00DDDCD7 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		978659812C681ABB00DDDCD7 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
+		978659842C681FDF00DDDCD7 /* PostCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCard.swift; sourceTree = "<group>"; };
 		97E851E02C4A18410021BFB9 /* RegisterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterView.swift; sourceTree = "<group>"; };
 		A60ED78594B0BB490100084D /* Pods_aatravelapp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_aatravelapp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF71FB37E23D25A0CAB8BFB9 /* Pods-aatravelapp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-aatravelapp.debug.xcconfig"; path = "Target Support Files/Pods-aatravelapp/Pods-aatravelapp.debug.xcconfig"; sourceTree = "<group>"; };
@@ -132,15 +136,14 @@
 		2A7C43132C32330500B40253 /* aatravelapp */ = {
 			isa = PBXGroup;
 			children = (
+				9786597F2C67DB8200DDDCD7 /* Components */,
 				9786597C2C65C8C300DDDCD7 /* Views */,
 				2A8281F72C4E2D360024F3F6 /* Info.plist */,
 				2A7C43142C32330500B40253 /* aatravelappApp.swift */,
 				2A7C433F2C32332A00B40253 /* Account.swift */,
-				2A7C43162C32330500B40253 /* ContentView.swift */,
 				2A7C43182C32330600B40253 /* Assets.xcassets */,
 				2A7C431A2C32330600B40253 /* aatravelapp.entitlements */,
 				2A7C431B2C32330600B40253 /* Preview Content */,
-				97E851E02C4A18410021BFB9 /* RegisterView.swift */,
 				2A7C43442C4E178A00B40253 /* AppDelegate.swift */,
 				2A7C43462C4E188700B40253 /* GoogleSignIn.swift */,
 			);
@@ -175,9 +178,28 @@
 		9786597C2C65C8C300DDDCD7 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				97E851E02C4A18410021BFB9 /* RegisterView.swift */,
 				9786597D2C65C90E00DDDCD7 /* HomeView.swift */,
+				2A7C43162C32330500B40253 /* ContentView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		9786597F2C67DB8200DDDCD7 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				978659802C67DC1000DDDCD7 /* Home */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		978659802C67DC1000DDDCD7 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				978659812C681ABB00DDDCD7 /* SearchBar.swift */,
+				978659842C681FDF00DDDCD7 /* PostCard.swift */,
+			);
+			path = Home;
 			sourceTree = "<group>";
 		};
 		AF9D06FC08701A1B99D722F2 /* Frameworks */ = {
@@ -449,8 +471,10 @@
 				2A7C43172C32330500B40253 /* ContentView.swift in Sources */,
 				97E851E12C4A18410021BFB9 /* RegisterView.swift in Sources */,
 				2A7C43152C32330500B40253 /* aatravelappApp.swift in Sources */,
+				978659832C681F3D00DDDCD7 /* SearchBar.swift in Sources */,
 				2A7C43452C4E178A00B40253 /* AppDelegate.swift in Sources */,
 				2A7C43402C32332A00B40253 /* Account.swift in Sources */,
+				978659852C681FDF00DDDCD7 /* PostCard.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
