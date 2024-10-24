@@ -1,11 +1,13 @@
-from .models import Account
+from .models import Account, Photo
 from rest_framework import viewsets, generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializer import AccountSerializer
+from .serializer import AccountSerializer, PhotoSerializer
 from google.auth.transport import requests
 from google.oauth2 import id_token
 from django.conf import settings
+from rest_framework.parsers import MultiPartParser, FormParser # For Images
+
 
 class AccountViewSet(viewsets.ModelViewSet):
   queryset = Account.objects.all()
@@ -46,3 +48,14 @@ class GoogleLogin(APIView):
             return Response({'message': 'User signed in successfully'}, status=status.HTTP_200_OK)
         except ValueError:
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+
+class PhotoUploadView(APIView):
+    parser_classes = [MultiPartParser, FormParser]
+
+    def post(self, request, *args, **kwargs):
+        serializer = PhotoSerializer(data=request.data)
+        if serializer.is_valid():
+            #serializer.save(user=request.user)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -6,6 +6,7 @@
 DerivedData/
 .DS_Store
 .idea/
+/media/
 
 # Swift Package Manager
 .build/

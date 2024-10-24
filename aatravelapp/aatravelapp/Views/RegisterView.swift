@@ -12,6 +12,8 @@ struct RegisterView: View {
     @State private var email: String = ""
     @State private var password: String = ""
     
+    var onSuccess: (String) -> Void  // Callback for when registration is successful
+    
     var body: some View {
         VStack {
             Text("Sign up")
@@ -93,6 +95,9 @@ struct RegisterView: View {
             if let data = data {
                 if let decodedResponse = try? JSONDecoder().decode(Account.self, from: data) {
                     print("Account created: \(decodedResponse)")
+                    DispatchQueue.main.async {
+                        self.onSuccess(decodedResponse.email)  // Trigger the callback to update the email in ContentView
+                    }
                 } else {
                     print("Invalid response from server")
                 }
@@ -145,8 +150,10 @@ struct RegisterView: View {
             }
 
             // Handle the response from the backend
-            if let responseString = String(data: data, encoding: .utf8) {
-                print("Response from backend: \(responseString)")
+            if let decodedResponse = try? JSONDecoder().decode([String: String].self, from: data), let userEmail = decodedResponse["email"] {
+                DispatchQueue.main.async {
+                    self.onSuccess(userEmail)  // Trigger the callback with the email
+                }
             }
         }.resume()
     }
@@ -155,6 +162,8 @@ struct RegisterView: View {
         return UIApplication.shared.windows.first?.rootViewController ?? UIViewController()
     }
 }
+
+
 
 struct ContinueWithButton: View {
     var text: String
@@ -179,8 +188,8 @@ struct ContinueWithButton: View {
     }
 }
 
-struct RegisterView_Previews: PreviewProvider {
-    static var previews: some View {
-        RegisterView()
-    }
-}
+//struct RegisterView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        RegisterView()
+//    }
+//}
