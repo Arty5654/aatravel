@@ -1,10 +1,3 @@
-//
-//  aatravelappApp.swift
-//  aatravelapp
-//
-//  Created by Arteom Avetissian on 6/30/24.
-//
-
 import SwiftUI
 import GoogleSignIn
 
@@ -14,11 +7,10 @@ struct aatravelappApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomeView()  // Change this to HomeView
                 .onOpenURL { url in
                     GIDSignIn.sharedInstance.handle(url)
                 }
         }
     }
 }
-

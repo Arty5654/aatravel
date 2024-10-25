@@ -144,6 +144,6 @@ struct ImagePicker: UIViewControllerRepresentable {
 }
 
 
-//#Preview {
-//    CreatePostView(userEmail: "user@example.com")
-//}
+#Preview {
+    CreatePostView(userEmail: "user@example.com")
+}

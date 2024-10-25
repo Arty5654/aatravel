@@ -1,20 +1,17 @@
-//
-//  HomeView.swift
-//  aatravelapp
-//
-//  Created by Allen Chang on 8/4/24.
-//
-
 import SwiftUI
 
 struct HomeView: View {
     @State private var searchText = ""
     @State private var selectedOption: String = "Explore"
+    @State private var userEmail: String = "user@example.com"
+    
+    // Boolean to check if the user is logged in
+    @State private var isLoggedIn: Bool = false  // Set to false initially
 
     var body: some View {
         TabView {
+            // Explore Tab
             VStack {
-                
                 // Filter section
                 VStack {
                     // Search Bar
@@ -49,7 +46,6 @@ struct HomeView: View {
                 // Feed
                 ScrollView {
                     VStack(spacing: 16) {
-                        // Gray box elements, 5 at the moment
                         ForEach(0..<5) { _ in
                             PostCardView()
                                 .padding(.horizontal)
@@ -58,43 +54,58 @@ struct HomeView: View {
                     .padding(.vertical, 8)
                 }
             }
-            
             .tabItem {
                 Image(systemName: "house")
                     .renderingMode(.original)
                 Text("Explore")
             }
             
-            // Add more tabs here
+            // Wishlists Tab
             Text("Wishlists View")
                 .tabItem {
                     Image(systemName: "heart")
                     Text("Wishlists")
                 }
             
-            Text("Trips View")
+            // Create Post Tab
+            CreatePostView(userEmail: userEmail)
                 .tabItem {
                     Image(systemName: "airplane")
-                    Text("Trips")
+                    Text("Create")
                 }
             
+            // Messages Tab
             Text("Messages View")
                 .tabItem {
                     Image(systemName: "message")
                     Text("Messages")
                 }
             
-            Text("Profile View")
+            // Profile/Registration Tab
+            if isLoggedIn {
+                ProfileView()
+                    .tabItem {
+                        Image(systemName: "person")
+                        Text("Profile")
+                    }
+            } else {
+                // Provide the onSuccess closure to RegisterView
+                RegisterView(onSuccess: { email in
+                    // Set the logged-in status to true and store the user's email
+                    self.isLoggedIn = true
+                    self.userEmail = email
+                })
                 .tabItem {
                     Image(systemName: "person")
-                    Text("Profile")
+                    Text("Register")
                 }
+            }
         }
-    } // end var: body
-} // end struct HomeView
+    }
+}
+
+
 
 #Preview {
     HomeView()
 }
-
-
