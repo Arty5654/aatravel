@@ -1,7 +1,7 @@
 from django.urls import path, include
 from . import views
 from rest_framework import routers
-from .views import AccountViewSet, RegisterView, GoogleLogin, PhotoUploadView
+from .views import AccountViewSet, RegisterView, GoogleLogin, PhotoUploadView, PostUploadView
 
 router = routers.DefaultRouter()
 router.register(r'accounts', AccountViewSet)
@@ -11,5 +11,6 @@ urlpatterns = [
   path('register/', RegisterView.as_view(), name='register'),
   path('google-login/', GoogleLogin.as_view(), name='google-login'),
   path('upload/', PhotoUploadView.as_view(), name='upload-photo'),
+  path('upload-post/', PostUploadView.as_view(), name='upload-post'),
   path('api-auth/', include('rest_framework.urls'))
 ]

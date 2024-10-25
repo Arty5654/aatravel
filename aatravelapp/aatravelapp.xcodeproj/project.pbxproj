@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2A4419222CCABA9200F4D94A /* CreatePostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A4419212CCABA9200F4D94A /* CreatePostView.swift */; };
 		2A7C43152C32330500B40253 /* aatravelappApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7C43142C32330500B40253 /* aatravelappApp.swift */; };
 		2A7C43172C32330500B40253 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7C43162C32330500B40253 /* ContentView.swift */; };
 		2A7C43192C32330600B40253 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A7C43182C32330600B40253 /* Assets.xcassets */; };
@@ -48,6 +49,7 @@
 
 /* Begin PBXFileReference section */
 		0642795FA1DCADB9D3136B71 /* Pods_aatravelappTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_aatravelappTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2A4419212CCABA9200F4D94A /* CreatePostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePostView.swift; sourceTree = "<group>"; };
 		2A7C43112C32330500B40253 /* aatravelapp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = aatravelapp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A7C43142C32330500B40253 /* aatravelappApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = aatravelappApp.swift; sourceTree = "<group>"; };
 		2A7C43162C32330500B40253 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -181,6 +183,7 @@
 				97E851E02C4A18410021BFB9 /* RegisterView.swift */,
 				9786597D2C65C90E00DDDCD7 /* HomeView.swift */,
 				2A7C43162C32330500B40253 /* ContentView.swift */,
+				2A4419212CCABA9200F4D94A /* CreatePostView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -466,6 +469,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A4419222CCABA9200F4D94A /* CreatePostView.swift in Sources */,
 				2A7C43472C4E188700B40253 /* GoogleSignIn.swift in Sources */,
 				9786597E2C65C90E00DDDCD7 /* HomeView.swift in Sources */,
 				2A7C43172C32330500B40253 /* ContentView.swift in Sources */,

@@ -1,8 +1,9 @@
-from .models import Account, Photo
+from .models import Account, Photo, Post
+from .serializer import AccountSerializer, PhotoSerializer, PostSerializer
+
 from rest_framework import viewsets, generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializer import AccountSerializer, PhotoSerializer
 from google.auth.transport import requests
 from google.oauth2 import id_token
 from django.conf import settings
@@ -57,5 +58,20 @@ class PhotoUploadView(APIView):
         if serializer.is_valid():
             #serializer.save(user=request.user)
             serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class PostUploadView(APIView):
+    def post(self, request, *args, **kwargs):
+        user_email = request.data.get('email')
+        try:
+            user = Account.objects.get(email=user_email)
+        except Account.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        # Handle file upload and caption
+        serializer = PostSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
