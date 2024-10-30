@@ -6,7 +6,7 @@ class AccountSerializer(serializers.ModelSerializer):
     model = Account
     #fields = ['email', 'password' 'created_at']
     #fields = '__all__'
-    fields = ['id', 'email', 'password', 'created_at']
+    fields = ['uuid', 'email', 'password', 'created_at']
 
 class PhotoSerializer(serializers.ModelSerializer):
     class Meta:

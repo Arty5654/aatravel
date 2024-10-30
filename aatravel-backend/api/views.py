@@ -26,6 +26,20 @@ class RegisterView(generics.CreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class LoginView(APIView):
+    def post(self, request, *args, **kwargs):
+        email = request.data.get('email')
+        password = request.data.get('password')
+
+        # Check if account exists
+        try:
+            account = Account.objects.get(email=email)
+            if account.password != password:
+                return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'email': account.email}, status=status.HTTP_200_OK)
+        except:
+            return Response({'error': 'Account not found'}, status=status.HTTP_404_NOT_FOUND)
+
 class GoogleLogin(APIView):
     #queryset = Account.objects.all()
     #serializer_class = AccountSerializer

@@ -4,19 +4,20 @@
 //
 //  Created by Allen Chang on 7/9/24.
 //
-
 import SwiftUI
 import GoogleSignIn
 
 struct RegisterView: View {
     @State private var email: String = ""
     @State private var password: String = ""
+    @State private var isLogin = false // State to toggle between login and sign-up modes
+    @State private var errorMessage: String? // State for showing error messages
     
-    var onSuccess: (String) -> Void  // Callback for when registration is successful
+    var onSuccess: (String) -> Void  // Callback for when registration/login is successful
     
     var body: some View {
         VStack {
-            Text("Sign up")
+            Text(isLogin ? "Log in" : "Sign up") // Toggle text based on login/signup mode
                 .font(.headline)
                 .padding(.top, 50)
             
@@ -42,10 +43,16 @@ struct RegisterView: View {
             }
             .padding(.vertical)
             
+            if let errorMessage = errorMessage {
+                Text(errorMessage)
+                    .foregroundColor(.red)
+                    .padding(.bottom)
+            }
+            
             Button {
-                createAccount()
+                isLogin ? loginAccount() : createAccount() // Toggle between login and signup
             } label: {
-                Text("Continue")
+                Text(isLogin ? "Log in" : "Continue")
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .padding()
@@ -53,6 +60,11 @@ struct RegisterView: View {
                     .cornerRadius(10)
             }
             .padding(.top, 10)
+            
+            Button(action: { isLogin.toggle() }) {
+                Text(isLogin ? "Don't have an account? Sign up" : "Already have an account? Log in")
+                    .padding(.top, 10)
+            }
             
             Text("or")
                 .padding(.top, 10)
@@ -94,15 +106,55 @@ struct RegisterView: View {
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let data = data {
                 if let decodedResponse = try? JSONDecoder().decode(Account.self, from: data) {
-                    print("Account created: \(decodedResponse)")
                     DispatchQueue.main.async {
                         self.onSuccess(decodedResponse.email)  // Trigger the callback to update the email in ContentView
                     }
                 } else {
-                    print("Invalid response from server")
+                    DispatchQueue.main.async {
+                        self.errorMessage = "Account already exists or invalid data"
+                    }
                 }
             } else {
-                print("Error: \(error?.localizedDescription ?? "Unknown error")")
+                DispatchQueue.main.async {
+                    self.errorMessage = "Error: \(error?.localizedDescription ?? "Unknown error")"
+                }
+            }
+        }.resume()
+    }
+    
+    func loginAccount() {
+        guard let url = URL(string: "http://127.0.0.1:8000/api/login/") else {
+            print("Invalid URL")
+            return
+        }
+        
+        let loginCredentials = ["email": email, "password": password]
+        
+        guard let encoded = try? JSONSerialization.data(withJSONObject: loginCredentials) else {
+            print("Failed to encode login credentials")
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = encoded
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let data = data {
+                if let decodedResponse = try? JSONDecoder().decode(Account.self, from: data) {
+                    DispatchQueue.main.async {
+                        self.onSuccess(decodedResponse.email)
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.errorMessage = "Invalid email or password"
+                    }
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.errorMessage = "Error: \(error?.localizedDescription ?? "Unknown error")"
+                }
             }
         }.resume()
     }
@@ -162,8 +214,6 @@ struct RegisterView: View {
         return UIApplication.shared.windows.first?.rootViewController ?? UIViewController()
     }
 }
-
-
 
 struct ContinueWithButton: View {
     var text: String
