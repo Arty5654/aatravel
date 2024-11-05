@@ -8,6 +8,7 @@ import SwiftUI
 import GoogleSignIn
 
 struct RegisterView: View {
+    @State private var uuid: String = ""
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var isLogin = false // State to toggle between login and sign-up modes
@@ -91,7 +92,7 @@ struct RegisterView: View {
             return
         }
         
-        let newAccount = Account(email: email, password: password, created_at: "")
+        let newAccount = Account(uuid: uuid, email: email, password: password, created_at: "")
         
         guard let encoded = try? JSONEncoder().encode(newAccount) else {
             print("Failed to encode account")
@@ -122,41 +123,55 @@ struct RegisterView: View {
         }.resume()
     }
     
+    // Struct for login response since we only need email not the entire account data
+    struct LoginResponse: Codable {
+        let email: String
+    }
+    
     func loginAccount() {
-        guard let url = URL(string: "http://127.0.0.1:8000/api/login/") else {
-            print("Invalid URL")
-            return
-        }
-        
-        let loginCredentials = ["email": email, "password": password]
-        
-        guard let encoded = try? JSONSerialization.data(withJSONObject: loginCredentials) else {
-            print("Failed to encode login credentials")
-            return
-        }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = encoded
-        
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            if let data = data {
-                if let decodedResponse = try? JSONDecoder().decode(Account.self, from: data) {
-                    DispatchQueue.main.async {
-                        self.onSuccess(decodedResponse.email)
-                    }
-                } else {
-                    DispatchQueue.main.async {
-                        self.errorMessage = "Invalid email or password"
-                    }
-                }
-            } else {
-                DispatchQueue.main.async {
-                    self.errorMessage = "Error: \(error?.localizedDescription ?? "Unknown error")"
-                }
+            guard let url = URL(string: "http://127.0.0.1:8000/api/login/") else {
+                print("Invalid URL")
+                return
             }
-        }.resume()
+
+            let loginCredentials = ["email": email, "password": password]
+
+            guard let encoded = try? JSONSerialization.data(withJSONObject: loginCredentials) else {
+                print("Failed to encode login credentials")
+                return
+            }
+
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.httpBody = encoded
+
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                if let data = data {
+                    // Debug statement to see respoonse from backend
+                    if let jsonString = String(data: data, encoding: .utf8) {
+                        print("Response JSON: \(jsonString)")
+                    }
+
+                    do {
+                        let decodedResponse = try JSONDecoder().decode(LoginResponse.self, from: data)
+                        DispatchQueue.main.async {
+                            print("Decoded response: \(decodedResponse)")
+                            self.onSuccess(decodedResponse.email)
+                        }
+                    } catch {
+                        print("Decoding error: \(error)")
+                        DispatchQueue.main.async {
+                            self.errorMessage = "Invalid email or password"
+                        }
+                    }
+                } else if let error = error {
+                    print("Network error: \(error.localizedDescription)")
+                    DispatchQueue.main.async {
+                        self.errorMessage = "Error: \(error.localizedDescription)"
+                    }
+                }
+            }.resume()
     }
     
     func handleGoogleSignIn() {
@@ -211,7 +226,7 @@ struct RegisterView: View {
             // Handle the response from the backend
             if let decodedResponse = try? JSONDecoder().decode([String: String].self, from: data), let userEmail = decodedResponse["email"] {
                 DispatchQueue.main.async {
-                    self.onSuccess(userEmail)  // Trigger the callback with the email
+                    self.onSuccess(userEmail)
                 }
             }
         }.resume()
