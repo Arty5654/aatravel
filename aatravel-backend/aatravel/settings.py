@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import os
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-i=kh)^)me+@gpv$v9+&@m39v0r85a)ujy%f4l&8_nqf$t4_b1!'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -102,9 +103,9 @@ WSGI_APPLICATION = 'aatravel.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'aatravelDB',
-        'USER': 'postgres',
-        'PASSWORD': 'root',
+        'NAME': config('DATABASE_NAME'),
+        'USER': config('DATABASE_USER'),
+        'PASSWORD': config('DATABASE_PASSWORD'),
         'HOST': 'localhost',
         'PORT': '5432',
 
@@ -157,7 +158,7 @@ SITE_ID = 1
 
 # settings.py
 
-GOOGLE_CLIENT_ID = '159502750934-pbonh3cktif9c1rarfvf01vifd4jo14b.apps.googleusercontent.com'
+GOOGLE_CLIENT_ID = config('GOOGLE_CLIENT_ID')
 
 
 AUTHENTICATION_BACKENDS = (

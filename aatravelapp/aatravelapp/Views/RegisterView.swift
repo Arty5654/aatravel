@@ -160,22 +160,29 @@ struct RegisterView: View {
     }
     
     func handleGoogleSignIn() {
-        let clientID = "159502750934-pbonh3cktif9c1rarfvf01vifd4jo14b.apps.googleusercontent.com";
+        //let clientID = "159502750934-pbonh3cktif9c1rarfvf01vifd4jo14b.apps.googleusercontent.com";
+        if let path = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist"),
+           let googleServiceInfo = NSDictionary(contentsOfFile: path),
+           let clientID = googleServiceInfo["CLIENT_ID"] as? String {
+            //print("Client ID:", clientID)
+            // Create Google Sign In configuration object.
+            let config = GIDConfiguration(clientID: clientID)
 
-        // Create Google Sign In configuration object.
-        let config = GIDConfiguration(clientID: clientID)
+            GIDSignIn.sharedInstance.signIn(with: config, presenting: getRootViewController()) { user, error in
+                if let error = error {
+                    print("Error signing in: \(error.localizedDescription)")
+                    return
+                }
 
-        GIDSignIn.sharedInstance.signIn(with: config, presenting: getRootViewController()) { user, error in
-            if let error = error {
-                print("Error signing in: \(error.localizedDescription)")
-                return
+                guard let authentication = user?.authentication, let idToken = authentication.idToken else { return }
+
+                // Send the token to your Django backend
+                sendTokenToBackend(idToken: idToken)
             }
-
-            guard let authentication = user?.authentication, let idToken = authentication.idToken else { return }
-
-            // Send the token to your Django backend
-            sendTokenToBackend(idToken: idToken)
+        } else {
+            print("Failed to load Client ID")
         }
+        
     }
 
     func sendTokenToBackend(idToken: String) {

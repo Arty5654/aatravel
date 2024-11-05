@@ -7,6 +7,7 @@ DerivedData/
 .DS_Store
 .idea/
 /media/
+*.plist
 
 # Swift Package Manager
 .build/
@@ -14,3 +15,6 @@ Packages/
 
 
 */Pipfile.lock
+
+# .env file
+.env
