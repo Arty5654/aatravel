@@ -14,16 +14,16 @@ class Account(models.Model):
 
 # Photo Upload
 class Photo(models.Model):
-    #user = models.ForeignKey(User, on_delete=models.CASCADE)
-    #TODO: Make sure photos link to the user
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
-    image = models.ImageField(upload_to='photos/')
-    uploaded_at = models.DateTimeField(auto_now_add=True)
-    
-    # def __str__(self):
-    #     return f"Photo by {self.user.email}"
-    def __str__(self):
-        return f"Photo {self.id} - {self.image.name}"
+  #user = models.ForeignKey(User, on_delete=models.CASCADE)
+  #TODO: Make sure photos link to the user
+  user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+  image = models.ImageField(upload_to='photos/')
+  uploaded_at = models.DateTimeField(auto_now_add=True)
+  
+  # def __str__(self):
+  #     return f"Photo by {self.user.email}"
+  def __str__(self):
+      return f"Photo {self.id} - {self.image.name}"
 
 # Create Post
 class Post(models.Model):

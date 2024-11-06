@@ -17,9 +17,9 @@ class AccountSerializer(serializers.ModelSerializer):
 
 
 class PhotoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Photo
-        fields = ['image', 'uploaded_at']
+  class Meta:
+    model = Photo
+    fields = ['image', 'uploaded_at']
 
 # For Posts
 class PostSerializer(serializers.ModelSerializer):
