@@ -4,8 +4,6 @@ from .models import Account, Photo, Post
 class AccountSerializer(serializers.ModelSerializer):
   class Meta:
     model = Account
-    #fields = ['email', 'password' 'created_at']
-    #fields = '__all__'
     fields = ['uuid', 'email', 'password', 'created_at']
 
 class PhotoSerializer(serializers.ModelSerializer):

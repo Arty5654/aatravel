@@ -20,6 +20,12 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = AccountSerializer
 
     def post(self, request, *args, **kwargs):
+        # Check if account exists already
+        email = request.data.get('email')
+        if Account.objects.filter(email=email).exists():
+            return Response({"error": "An account with this email already exists."},
+                status=status.HTTP_400_BAD_REQUEST)
+        # Normal Account Creation
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             serializer.save()

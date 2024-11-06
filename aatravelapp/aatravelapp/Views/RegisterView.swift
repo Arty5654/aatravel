@@ -108,7 +108,7 @@ struct RegisterView: View {
             if let data = data {
                 if let decodedResponse = try? JSONDecoder().decode(Account.self, from: data) {
                     DispatchQueue.main.async {
-                        self.onSuccess(decodedResponse.email)  // Trigger the callback to update the email in ContentView
+                        self.onSuccess(decodedResponse.email)  // Trigger the callback to update the email in HomeView
                     }
                 } else {
                     DispatchQueue.main.async {
