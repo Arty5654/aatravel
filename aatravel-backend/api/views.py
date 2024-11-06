@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from google.auth.transport import requests
 from google.oauth2 import id_token
+from django.contrib.auth.hashers import check_password
 from django.conf import settings
 from rest_framework.parsers import MultiPartParser, FormParser # For Images
 
@@ -40,10 +41,11 @@ class LoginView(APIView):
         # Check if account exists
         try:
             account = Account.objects.get(email=email)
-            if account.password != password:
+            if check_password(password, account.password):
+                return Response({'email': account.email}, status=status.HTTP_200_OK)
+            else:
                 return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-            return Response({'email': account.email}, status=status.HTTP_200_OK)
-        except:
+        except Account.DoesNotExist:
             return Response({'error': 'Account not found'}, status=status.HTTP_404_NOT_FOUND)
 
 class GoogleLogin(APIView):
