@@ -84,6 +84,22 @@ class PhotoUploadView(APIView):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class PostUploadView(APIView):
+<<<<<<< HEAD
+    def post(self, request, *args, **kwargs):
+        # Extract email to associate the post with the user
+        user_email = request.data.get('email')
+        try:
+            user = Account.objects.get(email=user_email)
+        except Account.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        # Handle file upload and metadata
+        serializer = PostSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=user)  # Associate user with the post
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+=======
   def post(self, request, *args, **kwargs):
     user_email = request.data.get('email')
     try:
@@ -97,3 +113,4 @@ class PostUploadView(APIView):
       serializer.save(user=user)
       return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+>>>>>>> e427ba9fed40edf670c5de70d7ef85c7a5261c35
