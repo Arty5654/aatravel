@@ -1,5 +1,5 @@
 from .models import Account, Photo, Post
-from .serializer import AccountSerializer, PhotoSerializer, PostSerializer
+from .serializer import AccountSerializer, PhotoSerializer, PostSerializer, ChangePasswordSerializer
 
 from rest_framework import viewsets, generics, status
 from rest_framework.views import APIView
@@ -112,3 +112,33 @@ def post(self, request, *args, **kwargs):
       serializer.save(user=user)
       return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ProfileView(APIView):
+    def get(self, request):
+        email = request.query_params.get('email')
+        if not email:
+            return Response({'error': 'Email required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            account = Account.objects.get(email=email)
+        except Account.DoesNotExist:
+            return Response({'error': 'Account not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = AccountSerializer(account)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class ChangePasswordView(APIView):
+    def post(self, request):
+        serializer = ChangePasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            new_password = serializer.validated_data['new_password']
+
+            try:
+                account = Account.objects.get(email=email)
+                account.password = make_password(new_password)
+                account.save()
+                return Response({"message": "Password updated successfully."}, status=status.HTTP_200_OK)
+            except Account.DoesNotExist:
+                return Response({"error": "Account not found."}, status=status.HTTP_404_NOT_FOUND)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

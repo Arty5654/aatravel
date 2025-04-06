@@ -70,7 +70,7 @@ struct HomeView: View {
             // Create Post Tab
             CreatePostView(userEmail: userEmail)
                 .tabItem {
-                    Image(systemName: "airplane")
+                    Image(systemName: "plus")
                     Text("Create")
                 }
             
