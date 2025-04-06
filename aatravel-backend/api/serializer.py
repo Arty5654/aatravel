@@ -23,6 +23,6 @@ class PhotoSerializer(serializers.ModelSerializer):
 
 # For Posts
 class PostSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = Post
-    fields = ['user', 'image', 'caption', 'created_at']
+    class Meta:
+        model = Post
+        fields = ['user', 'image', 'caption', 'location', 'date_taken', 'created_at']

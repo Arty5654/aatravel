@@ -27,12 +27,13 @@ class Photo(models.Model):
 
 # Create Post
 class Post(models.Model):
-  # Allow blank for user for now
-  #TODO: Make sure posts link to the user
-  user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
-  image = models.ImageField(upload_to='posts/')
-  caption = models.TextField()
-  created_at = models.DateTimeField(auto_now_add=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    image = models.ImageField(upload_to='posts/')
+    caption = models.TextField(blank=True)
+    location = models.CharField(max_length=255, blank=True, null=True)
+    date_taken = models.CharField(max_length=255, blank=True, null=True)  # Storing date as a string for simplicity
+    created_at = models.DateTimeField(auto_now_add=True)
 
-  def __str__(self):
-    return f"{self.user.email}'s Post"
+    def __str__(self):
+        return f"Post by {self.user.email if self.user else 'Unknown'} at {self.created_at}"

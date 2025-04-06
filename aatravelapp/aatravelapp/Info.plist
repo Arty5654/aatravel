@@ -43,5 +43,15 @@
             </array>
         </dict>
     </array>
+    
+<!--    <key>NSPhotoLibraryUsageDescription</key>-->
+<!--    <string>We need access to your photo library so we can fetch your images and read location/date metadata.</string>-->
+    
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>We need photo library access to pick images and read their location and date.</string>
+    
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Reverse geocoding photo coordinates to display place names.</string>
+
 </dict>
 </plist>
