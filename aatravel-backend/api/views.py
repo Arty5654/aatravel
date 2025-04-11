@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from google.auth.transport import requests
 from google.oauth2 import id_token
-from django.contrib.auth.hashers import check_password
+from django.contrib.auth.hashers import check_password, make_password
 from django.conf import settings
 from rest_framework.parsers import MultiPartParser, FormParser # For Images
 
@@ -17,36 +17,39 @@ class AccountViewSet(viewsets.ModelViewSet):
   #permissions_classes = [permissions.IsAuthenticated]
 
 class RegisterView(generics.CreateAPIView):
-  queryset = Account.objects.all()
-  serializer_class = AccountSerializer
+    queryset = Account.objects.all()
+    serializer_class = AccountSerializer
 
-  def post(self, request, *args, **kwargs):
-    # Check if account exists already
-    email = request.data.get('email')
-    if Account.objects.filter(email=email).exists():
-      return Response({"error": "An account with this email already exists."},
-        status=status.HTTP_400_BAD_REQUEST)
-    # Normal Account Creation
-    serializer = self.get_serializer(data=request.data)
-    if serializer.is_valid():
-      serializer.save()
-      return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request, *args, **kwargs):
+        email = request.data.get('email')
+        if Account.objects.filter(email__iexact=email).exists():
+            return Response({"error": "An account with this email already exists."},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            account = serializer.save()
+            return Response(AccountSerializer(account).data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class LoginView(APIView):
-  def post(self, request, *args, **kwargs):
-    email = request.data.get('email')
-    password = request.data.get('password')
+    def post(self, request, *args, **kwargs):
+        email = request.data.get('email')
+        password = request.data.get('password')
 
-    # Check if account exists
-    try:
-      account = Account.objects.get(email=email)
-      if check_password(password, account.password):
-        return Response({'email': account.email}, status=status.HTTP_200_OK)
-      else:
-        return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-    except Account.DoesNotExist:
-      return Response({'error': 'Account not found'}, status=status.HTTP_404_NOT_FOUND)
+        try:
+            account = Account.objects.get(email=email)
+            if check_password(password, account.password):
+                # return Response({
+                #     'uuid': str(account.uuid),
+                #     'email': account.email
+                # }, status=status.HTTP_200_OK)
+                serializer = AccountSerializer(account)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+        except Account.DoesNotExist:
+            return Response({'error': 'Account not found'}, status=status.HTTP_404_NOT_FOUND)
 
 class GoogleLogin(APIView):
   #queryset = Account.objects.all()
@@ -131,14 +134,16 @@ class ChangePasswordView(APIView):
     def post(self, request):
         serializer = ChangePasswordSerializer(data=request.data)
         if serializer.is_valid():
-            email = serializer.validated_data['email']
+            uuid = serializer.validated_data['uuid']
             new_password = serializer.validated_data['new_password']
 
             try:
-                account = Account.objects.get(email=email)
+                account = Account.objects.get(uuid=uuid)
                 account.password = make_password(new_password)
                 account.save()
                 return Response({"message": "Password updated successfully."}, status=status.HTTP_200_OK)
             except Account.DoesNotExist:
                 return Response({"error": "Account not found."}, status=status.HTTP_404_NOT_FOUND)
+        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+

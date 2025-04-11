@@ -10,6 +10,6 @@ import Foundation
 struct Account: Codable, Hashable {
     var uuid: String
     var email: String
-    var password: String
+    //var password: String
     var created_at: String
 }

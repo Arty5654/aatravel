@@ -12,6 +12,7 @@ class AccountSerializer(serializers.ModelSerializer):
   
   def create(self, validData):
     # Hash pass before saving it to DB
+    validData['email'] = validData['email'].lower()
     validData['password'] = make_password(validData['password'])
     return super().create(validData)
 
@@ -28,7 +29,7 @@ class PostSerializer(serializers.ModelSerializer):
         fields = ['user', 'image', 'caption', 'location', 'date_taken', 'created_at']
 
 class ChangePasswordSerializer(serializers.Serializer):
-    email = serializers.EmailField()
+    uuid = serializers.UUIDField()
     new_password = serializers.CharField(write_only=True)
 
     def validate_new_password(self, value):

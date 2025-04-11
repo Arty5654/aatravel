@@ -91,24 +91,26 @@ struct RegisterView: View {
             print("Invalid URL")
             return
         }
-        
-        let newAccount = Account(uuid: uuid, email: email, password: password, created_at: "")
-        
-        guard let encoded = try? JSONEncoder().encode(newAccount) else {
+
+        let newAccount = ["email": email, "password": password]
+
+        guard let encoded = try? JSONSerialization.data(withJSONObject: newAccount) else {
             print("Failed to encode account")
             return
         }
-        
+
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = encoded
-        
+
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let data = data {
-                if let decodedResponse = try? JSONDecoder().decode(Account.self, from: data) {
+                if let decoded = try? JSONDecoder().decode(Account.self, from: data) {
                     DispatchQueue.main.async {
-                        self.onSuccess(decodedResponse.email)  // Trigger the callback to update the email in HomeView
+                        UserDefaults.standard.set(decoded.uuid, forKey: "userUUID")
+                        UserDefaults.standard.set(decoded.email, forKey: "userEmail")
+                        self.onSuccess(decoded.email)
                     }
                 } else {
                     DispatchQueue.main.async {
@@ -129,49 +131,42 @@ struct RegisterView: View {
     }
     
     func loginAccount() {
-            guard let url = URL(string: "http://127.0.0.1:8000/api/login/") else {
-                print("Invalid URL")
-                return
-            }
+        guard let url = URL(string: "http://127.0.0.1:8000/api/login/") else {
+            print("Invalid URL")
+            return
+        }
 
-            let loginCredentials = ["email": email, "password": password]
+        let loginCredentials = ["email": email, "password": password]
 
-            guard let encoded = try? JSONSerialization.data(withJSONObject: loginCredentials) else {
-                print("Failed to encode login credentials")
-                return
-            }
+        guard let encoded = try? JSONSerialization.data(withJSONObject: loginCredentials) else {
+            print("Failed to encode login credentials")
+            return
+        }
 
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.httpBody = encoded
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = encoded
 
-            URLSession.shared.dataTask(with: request) { data, response, error in
-                if let data = data {
-                    // Debug statement to see respoonse from backend
-                    if let jsonString = String(data: data, encoding: .utf8) {
-                        print("Response JSON: \(jsonString)")
-                    }
-
-                    do {
-                        let decodedResponse = try JSONDecoder().decode(LoginResponse.self, from: data)
-                        DispatchQueue.main.async {
-                            print("Decoded response: \(decodedResponse)")
-                            self.onSuccess(decodedResponse.email)
-                        }
-                    } catch {
-                        print("Decoding error: \(error)")
-                        DispatchQueue.main.async {
-                            self.errorMessage = "Invalid email or password"
-                        }
-                    }
-                } else if let error = error {
-                    print("Network error: \(error.localizedDescription)")
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let data = data {
+                if let decoded = try? JSONDecoder().decode(Account.self, from: data) {
                     DispatchQueue.main.async {
-                        self.errorMessage = "Error: \(error.localizedDescription)"
+                        UserDefaults.standard.set(decoded.uuid, forKey: "userUUID")
+                        UserDefaults.standard.set(decoded.email, forKey: "userEmail")
+                        self.onSuccess(decoded.email)
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.errorMessage = "Invalid email or password"
                     }
                 }
-            }.resume()
+            } else {
+                DispatchQueue.main.async {
+                    self.errorMessage = "Error: \(error?.localizedDescription ?? "Unknown error")"
+                }
+            }
+        }.resume()
     }
     
     func handleGoogleSignIn() {
