@@ -83,15 +83,16 @@ struct HomeView: View {
             
             // Profile/Registration Tab
             if isLoggedIn {
-                ProfileView()
-                    .tabItem {
-                        Image(systemName: "person")
-                        Text("Profile")
-                    }
+                ProfileView(onLogout: {
+                    self.isLoggedIn = false
+                    self.userEmail = ""
+                })
+                .tabItem {
+                    Image(systemName: "person")
+                    Text("Profile")
+                }
             } else {
-                // Provide the onSuccess closure to RegisterView
                 RegisterView(onSuccess: { email in
-                    // Set the logged-in status to true and store the user's email
                     self.isLoggedIn = true
                     self.userEmail = email
                 })

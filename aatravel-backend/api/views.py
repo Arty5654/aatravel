@@ -147,3 +147,8 @@ class ChangePasswordView(APIView):
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class LogoutView(APIView):
+    def post(self, request):
+        # Use JWT Tokens later
+        return Response({"message": "Logged out successfully."}, status=status.HTTP_200_OK)
+
