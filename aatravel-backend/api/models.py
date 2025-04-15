@@ -9,6 +9,7 @@ class Account(models.Model):
   email = models.EmailField(max_length=100, null=True, blank=True)
   password = models.CharField(max_length=100, null=True, blank=True)
   created_at = models.DateTimeField(auto_now_add=True)
+  profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
   def __str__(self):
     return self.email if self.email else "No Email"
 
@@ -27,7 +28,8 @@ class Photo(models.Model):
 
 # Create Post
 class Post(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    #id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     image = models.ImageField(upload_to='posts/')
     caption = models.TextField(blank=True)

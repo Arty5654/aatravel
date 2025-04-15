@@ -110,6 +110,7 @@ struct RegisterView: View {
                     DispatchQueue.main.async {
                         UserDefaults.standard.set(decoded.uuid, forKey: "userUUID")
                         UserDefaults.standard.set(decoded.email, forKey: "userEmail")
+                        UserDefaults.standard.set(decoded.profile_picture_url, forKey: "profilePictureURL")
                         self.onSuccess(decoded.email)
                     }
                 } else {
@@ -154,6 +155,7 @@ struct RegisterView: View {
                     DispatchQueue.main.async {
                         UserDefaults.standard.set(decoded.uuid, forKey: "userUUID")
                         UserDefaults.standard.set(decoded.email, forKey: "userEmail")
+                        UserDefaults.standard.set(decoded.profile_picture_url, forKey: "profilePictureURL")
                         self.onSuccess(decoded.email)
                     }
                 } else {

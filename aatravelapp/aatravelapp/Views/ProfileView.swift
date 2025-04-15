@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import PhotosUI
+import Foundation
 
 struct ProfileView: View {
     @AppStorage("userEmail") var userEmail: String = "unknown@example.com"
@@ -14,18 +16,46 @@ struct ProfileView: View {
     @State private var confirmPassword: String = ""
     @State private var statusMessage: String?
     var onLogout: () -> Void
+    
+    @State private var showImagePicker = false
+    @State private var selectedImage: UIImage?
+    @State private var profilePictureURL: String = "" // Or your actual state
 
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                // Header
                 VStack(spacing: 8) {
-                    Image(systemName: "person.circle.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 100, height: 100)
-                        .foregroundColor(.blue)
-
+                    Button(action: {
+                        showImagePicker = true
+                    }) {
+                        if let selectedImage = selectedImage {
+                            Image(uiImage: selectedImage)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 100, height: 100)
+                                .clipShape(Circle())
+                        } else if let url = URL(string: profilePictureURL), !profilePictureURL.isEmpty {
+                            AsyncImage(url: url) { image in
+                                image
+                                    .resizable()
+                                    .scaledToFill()
+                            } placeholder: {
+                                ProgressView()
+                            }
+                            .frame(width: 100, height: 100)
+                            .clipShape(Circle())
+                        } else {
+                            Image(systemName: "person.circle.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 100, height: 100)
+                                .foregroundColor(.blue)
+                        }
+                    }
+                    .sheet(isPresented: $showImagePicker) {
+                        ImagePicker(selectedImage: $selectedImage, onImagePicked: uploadProfileImage)
+                    }
+                    
                     Text("My Profile")
                         .font(.largeTitle)
                         .bold()
@@ -182,6 +212,43 @@ struct ProfileView: View {
                 UserDefaults.standard.removeObject(forKey: "userUUID")
                 self.statusMessage = "Logged out successfully."
                 self.onLogout()
+            }
+        }.resume()
+    }
+    
+    func uploadProfileImage(_ image: UIImage) {
+        guard let uuid = UserDefaults.standard.string(forKey: "userUUID"),
+              let url = URL(string: "http://127.0.0.1:8000/api/upload-profile-picture/") else { return }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        let boundary = UUID().uuidString
+        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+
+        var data = Data()
+
+        // Image part
+        data.append("--\(boundary)\r\n".data(using: .utf8)!)
+        data.append("Content-Disposition: form-data; name=\"image\"; filename=\"profile.jpg\"\r\n".data(using: .utf8)!)
+        data.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
+        data.append(image.jpegData(compressionQuality: 0.7)!)
+        data.append("\r\n".data(using: .utf8)!)
+
+        // UUID part
+        data.append("--\(boundary)\r\n".data(using: .utf8)!)
+        data.append("Content-Disposition: form-data; name=\"uuid\"\r\n\r\n".data(using: .utf8)!)
+        data.append("\(uuid)\r\n".data(using: .utf8)!)
+
+        data.append("--\(boundary)--\r\n".data(using: .utf8)!)
+        request.httpBody = data
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    statusMessage = "Upload error: \(error.localizedDescription)"
+                } else {
+                    statusMessage = "Profile picture updated!"
+                }
             }
         }.resume()
     }

@@ -1,7 +1,7 @@
 from django.urls import path, include
 from . import views
 from rest_framework import routers
-from .views import AccountViewSet, RegisterView, GoogleLogin, PhotoUploadView, PostUploadView, LoginView, ProfileView, ChangePasswordView, LogoutView
+from .views import AccountViewSet, RegisterView, GoogleLogin, PhotoUploadView, PostUploadView, LoginView, ProfileView, ChangePasswordView, LogoutView, UploadProfilePictureView
 
 router = routers.DefaultRouter()
 router.register(r'accounts', AccountViewSet)
@@ -16,5 +16,6 @@ urlpatterns = [
   path('change-password/', ChangePasswordView.as_view(), name='change-password'),
   path('login/', LoginView.as_view(), name='login'),
   path('logout/', LogoutView.as_view(), name='logout'),
+  path('upload-profile-picture/', UploadProfilePictureView.as_view(), name='upload-profile-picture'),
   path('api-auth/', include('rest_framework.urls'))
 ]

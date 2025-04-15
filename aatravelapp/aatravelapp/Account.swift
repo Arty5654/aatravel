@@ -12,4 +12,5 @@ struct Account: Codable, Hashable {
     var email: String
     //var password: String
     var created_at: String
+    let profile_picture_url: String?
 }

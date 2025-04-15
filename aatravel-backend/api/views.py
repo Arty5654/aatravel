@@ -152,3 +152,21 @@ class LogoutView(APIView):
         # Use JWT Tokens later
         return Response({"message": "Logged out successfully."}, status=status.HTTP_200_OK)
 
+class UploadProfilePictureView(APIView):
+  def post(self, request):
+    uuid = request.data.get('uuid')
+    image = request.FILES.get('image')
+
+    if not uuid or not image:
+        return Response({'error': 'Missing uuid or image'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        account = Account.objects.get(uuid=uuid)
+        account.profile_picture = image
+        account.save()
+        return Response({'message': 'Profile picture updated'}, status=status.HTTP_200_OK)
+    except Account.DoesNotExist:
+        return Response({'error': 'Account not found'}, status=status.HTTP_404_NOT_FOUND)
+
+  
+
