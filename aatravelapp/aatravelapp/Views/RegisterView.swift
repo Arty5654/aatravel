@@ -8,26 +8,41 @@ import SwiftUI
 import GoogleSignIn
 
 struct RegisterView: View {
-    @State private var uuid: String = ""
+    // Check if user is logged in
+    @EnvironmentObject var session: UserSession
+    var isLoggedIn: Bool {
+        session.isLoggedIn
+    }
+    var userUUID: String {
+        session.userUUID ?? "N/A"
+    }
+    
+    @State private var isLoginMode = false
+    //@State private var uuid: String = ""
     @State private var email: String = ""
     @State private var username: String = ""
     @State private var password: String = ""
-    @State private var isLogin = false // State to toggle between login and sign-up modes
     @State private var errorMessage: String? // State for showing error messages
     
     var onSuccess: (String) -> Void  // Callback for when registration/login is successful
     
     var body: some View {
         VStack {
-            Text(isLogin ? "Log in" : "Sign up") // Toggle text based on login/signup mode
+            Text(isLoginMode ? "Log in" : "Sign up") // Toggle text based on login/signup mode
                 .font(.headline)
                 .padding(.top, 50)
             
             VStack(alignment: .leading) {
                 HStack {
-                    TextField("Email or Username", text: $email)
-                        .keyboardType(.emailAddress)
-                        .autocapitalization(.none)
+                    if !isLoginMode {
+                        TextField("Email", text: $email)
+                            .keyboardType(.emailAddress)
+                            .autocapitalization(.none)
+                    } else {
+                        TextField("Email or Username", text: $email)
+                            .keyboardType(.emailAddress)
+                            .autocapitalization(.none)
+                    }
                     Spacer()
                 }
                 .padding()
@@ -35,7 +50,7 @@ struct RegisterView: View {
                     RoundedRectangle(cornerRadius: 10)
                         .stroke(Color.gray, lineWidth: 1)
                 )
-                if !isLogin {
+                if !isLoginMode {
                     TextField("Username", text: $username)
                         .padding()
                         .overlay(
@@ -60,9 +75,9 @@ struct RegisterView: View {
             }
             
             Button {
-                isLogin ? loginAccount() : createAccount() // Toggle between login and signup
+                isLoginMode ? loginAccount() : createAccount() // Toggle between login and signup
             } label: {
-                Text(isLogin ? "Log in" : "Continue")
+                Text(isLoginMode ? "Log in" : "Continue")
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .padding()
@@ -71,8 +86,8 @@ struct RegisterView: View {
             }
             .padding(.top, 10)
             
-            Button(action: { isLogin.toggle() }) {
-                Text(isLogin ? "Don't have an account? Sign up" : "Already have an account? Log in")
+            Button(action: { isLoginMode.toggle() }) {
+                Text(isLoginMode ? "Don't have an account? Sign up" : "Already have an account? Log in")
                     .padding(.top, 10)
             }
             

@@ -47,29 +47,25 @@ class Account(AbstractBaseUser, PermissionsMixin):
   def __str__(self):
     return self.email
 
-# Photo Upload
-class Photo(models.Model):
-  #user = models.ForeignKey(User, on_delete=models.CASCADE)
-  #TODO: Make sure photos link to the user
-  user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
-  image = models.ImageField(upload_to='photos/')
-  uploaded_at = models.DateTimeField(auto_now_add=True)
-  
-  # def __str__(self):
-  #     return f"Photo by {self.user.email}"
-  def __str__(self):
-      return f"Photo {self.id} - {self.image.name}"
-
-# Create Post
 class Post(models.Model):
-    #id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
-    image = models.ImageField(upload_to='posts/')
     caption = models.TextField(blank=True)
     location = models.CharField(max_length=255, blank=True, null=True)
-    date_taken = models.CharField(max_length=255, blank=True, null=True)  # Storing date as a string for simplicity
+    date_taken = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Post by {self.user.email if self.user else 'Unknown'} at {self.created_at}"
+        return f"Post by {self.user.email} - {self.caption[:30]}"
+    
+
+class Photo(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    post = models.ForeignKey('Post', on_delete=models.CASCADE, related_name='photos', null=True, blank=True)
+    image = models.ImageField(upload_to='photos/')
+    location = models.CharField(max_length=255, blank=True, null=True)
+    date_taken = models.CharField(max_length=255, blank=True, null=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+  
+    def __str__(self):
+        return f"Photo for Post {self.post.uuid}"

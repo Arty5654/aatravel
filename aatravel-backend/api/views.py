@@ -10,6 +10,7 @@ from django.contrib.auth.hashers import check_password, make_password
 from django.conf import settings
 from rest_framework.parsers import MultiPartParser, FormParser # For Images
 from django.contrib.auth import authenticate
+from rest_framework.decorators import api_view
 
 
 class AccountViewSet(viewsets.ModelViewSet):
@@ -81,33 +82,36 @@ class PhotoUploadView(APIView):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class PostUploadView(APIView):
+    parser_classes = [MultiPartParser, FormParser]
+
     def post(self, request, *args, **kwargs):
-        # Use uuid instead of email
         user_uuid = request.data.get('uuid')
+        caption = request.data.get('caption')
+
         try:
             user = Account.objects.get(uuid=user_uuid)
         except Account.DoesNotExist:
             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = PostSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(user=user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-  
-# def post(self, request, *args, **kwargs):
-#     user_email = request.data.get('email')
-#     try:
-#       user = Account.objects.get(email=user_email)
-#     except Account.DoesNotExist:
-#       return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        # Create the Post
+        post = Post.objects.create(user=user, caption=caption)
 
-#     # Handle file upload and caption
-#     serializer = PostSerializer(data=request.data)
-#     if serializer.is_valid():
-#       serializer.save(user=user)
-#       return Response(serializer.data, status=status.HTTP_201_CREATED)
-#     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        index = 0
+        while f'image_{index}' in request.FILES:
+            image = request.FILES[f'image_{index}']
+            location = request.data.get(f'location_{index}', 'Unknown')
+            date_taken = request.data.get(f'date_taken_{index}', 'Unknown')
+
+            Photo.objects.create(
+                post=post,
+                image=image,
+                location=location,
+                date_taken=date_taken
+            )
+            index += 1
+
+        return Response({"message": "Post created successfully."}, status=status.HTTP_201_CREATED)
+
 
 class ProfileView(APIView):
     def get(self, request):
@@ -120,7 +124,8 @@ class ProfileView(APIView):
         except Account.DoesNotExist:
             return Response({'error': 'Account not found'}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = AccountSerializer(account)
+        #serializer = AccountSerializer(account)
+        serializer = AccountSerializer(account, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class ChangePasswordView(APIView):
@@ -160,6 +165,18 @@ class UploadProfilePictureView(APIView):
         return Response({'message': 'Profile picture updated'}, status=status.HTTP_200_OK)
     except Account.DoesNotExist:
         return Response({'error': 'Account not found'}, status=status.HTTP_404_NOT_FOUND)
+  
+class GetProfilePictureView(APIView):
+  def post(self, request):
+      uuid = request.data.get('uuid')
+      try:
+          user = Account.objects.get(uuid=uuid)
+          return Response({
+              "profile_picture_url": user.profile_picture.url if user.profile_picture else ""
+          })
+      except Account.DoesNotExist:
+          return Response({"error": "User not found"}, status=404)
+
 
   
 

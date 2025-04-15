@@ -2,13 +2,22 @@ import SwiftUI
 import Foundation
 
 struct HomeView: View {
+    // Check if user is logged in
+    @EnvironmentObject var session: UserSession
+    var isLoggedIn: Bool {
+        session.isLoggedIn
+    }
+    var userUUID: String {
+        session.userUUID ?? "N/A"
+    }
+    
     @State private var searchText = ""
     @State private var selectedOption: String = "Explore"
     @State private var userEmail: String = "user@example.com"
-    @AppStorage("userUUID") var userUUID: String = "N/A"
+    //@AppStorage("userUUID") var userUUID: String = "N/A"
     
     // Boolean to check if the user is logged in
-    @State private var isLoggedIn: Bool = false  // Set to false initially
+    //@State private var isLoggedIn: Bool = false  // Set to false initially
 
     var body: some View {
         TabView {
@@ -87,18 +96,17 @@ struct HomeView: View {
             
             // Profile/Registration Tab
             if isLoggedIn {
-                ProfileView(onLogout: {
-                    self.isLoggedIn = false
-                    self.userEmail = ""
-                })
-                .tabItem {
-                    Image(systemName: "person")
-                    Text("Profile")
-                }
+                    ProfileView(onLogout: {
+                        session.logout()
+                    })
+                    .tabItem {
+                        Image(systemName: "person")
+                        Text("Profile")
+                    }
             } else {
                 RegisterView(onSuccess: { email in
-                    self.isLoggedIn = true
-                    self.userEmail = email
+                    // This gets called after successful registration/login
+                    session.userUUID = UserDefaults.standard.string(forKey: "userUUID")
                 })
                 .tabItem {
                     Image(systemName: "person")

@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Media Settings
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+#MEDIA_ROOT = BASE_DIR / 'media'
 
 # Static settings (needed if not already set)
 STATIC_URL = '/static/'

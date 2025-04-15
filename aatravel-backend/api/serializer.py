@@ -25,15 +25,24 @@ class AccountSerializer(serializers.ModelSerializer):
 
 
 class PhotoSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = Photo
-    fields = ['image', 'uploaded_at']
+    class Meta:
+        model = Photo
+        fields = ['image', 'location', 'date_taken']
 
-# For Posts
+
 class PostSerializer(serializers.ModelSerializer):
+    photos = PhotoSerializer(many=True)
+
     class Meta:
         model = Post
-        fields = ['user', 'image', 'caption', 'location', 'date_taken', 'created_at']
+        fields = ['user', 'caption', 'created_at', 'photos']
+
+    def create(self, validated_data):
+        photos_data = validated_data.pop('photos')
+        post = Post.objects.create(**validated_data)
+        for photo_data in photos_data:
+            Photo.objects.create(post=post, **photo_data)
+        return post
 
 class ChangePasswordSerializer(serializers.Serializer):
     uuid = serializers.UUIDField()
