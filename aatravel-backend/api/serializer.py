@@ -6,7 +6,7 @@ class AccountSerializer(serializers.ModelSerializer):
   profile_picture_url = serializers.SerializerMethodField()
   class Meta:
     model = Account
-    fields = ['uuid', 'email', 'password', 'created_at', 'profile_picture_url']
+    fields = ['uuid', 'email', 'username', 'password', 'created_at', 'profile_picture_url']
 
     # Password is not in the serialized output
     extra_kwargs = {'password': {'write_only': True}}

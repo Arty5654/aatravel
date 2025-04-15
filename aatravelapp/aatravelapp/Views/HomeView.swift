@@ -1,9 +1,11 @@
 import SwiftUI
+import Foundation
 
 struct HomeView: View {
     @State private var searchText = ""
     @State private var selectedOption: String = "Explore"
     @State private var userEmail: String = "user@example.com"
+    @AppStorage("userUUID") var userUUID: String = "N/A"
     
     // Boolean to check if the user is logged in
     @State private var isLoggedIn: Bool = false  // Set to false initially
@@ -68,7 +70,9 @@ struct HomeView: View {
                 }
             
             // Create Post Tab
-            CreatePostView(userEmail: userEmail)
+            NavigationStack {
+                    CreatePostView()
+                }
                 .tabItem {
                     Image(systemName: "plus")
                     Text("Create")

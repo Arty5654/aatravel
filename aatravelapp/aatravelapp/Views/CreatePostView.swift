@@ -8,109 +8,139 @@ struct CreatePostView: View {
     @State var selectedImage: UIImage?
     @State var showLegacyPicker = false
     @State var caption: String = ""
-    @State var userEmail: String
+    //@State var userEmail: String
+    @AppStorage("userUUID") var userUUID: String = "N/A"
     @State var locationString: String = "Unknown Location"
     @State var dateString: String = "Unknown Date"
+    var isLoggedIn: Bool {
+        UUID(uuidString: userUUID) != nil && userUUID != "N/A"
+    }
+
     
     // Track Photo Library auth status (for debugging or gating)
     @State private var authStatus: PHAuthorizationStatus = PHPhotoLibrary.authorizationStatus(for: .readWrite)
 
     var body: some View {
-        VStack(spacing: 16) {
-            Text("Current Auth Status: \(authStatus.rawValue)")
-
-            // Show selected image
-            if let image = selectedImage {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 200, height: 200)
-            }
-
-            // Button to pick an image
-            Button("Select Image") {
-                // If you want to request permission first if .notDetermined:
-                let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
-                if status == .notDetermined {
-                    PHPhotoLibrary.requestAuthorization(for: .readWrite) { newStatus in
-                        DispatchQueue.main.async {
-                            authStatus = newStatus
-                            if newStatus == .authorized || newStatus == .limited {
-                                showLegacyPicker = true
-                            } else {
-                                print("User denied Photo Library access.")
-                            }
-                        }
+        VStack {
+            if !isLoggedIn {
+                VStack(spacing: 16) {
+                    Image(systemName: "person.crop.circle.badge.exclamationmark")
+                        .resizable()
+                        .frame(width: 80, height: 80)
+                        .foregroundColor(.red)
+                    
+                    Text("Please log in or create an account to post.")
+                        .multilineTextAlignment(.center)
+                        .font(.headline)
+                    
+                    NavigationLink(destination: RegisterView(onSuccess: { _ in })) {
+                        Text("Go to Login/Register")
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
                     }
                 }
-                else if status == .authorized || status == .limited {
-                    // Already have permission, just show the picker
-                    showLegacyPicker = true
-                } else {
-                    print("No photo library access. Prompt user to enable in Settings.")
-                }
-            }
-            .padding()
-            .background(Color.blue)
-            .foregroundColor(.white)
-            .cornerRadius(10)
-
-            // Editable caption
-            TextField("Add a caption...", text: $caption)
                 .padding()
-                .background(Color.gray.opacity(0.1))
-                .cornerRadius(10)
-                .padding(.horizontal)
-
-            // Display or edit the auto‐filled metadata
-            VStack(alignment: .leading) {
-                Text("Image Metadata")
-                    .font(.headline)
-                TextField("Location", text: $locationString)
+            } else {
+                
+                VStack(spacing: 16) {
+                    Text("Current Auth Status: \(authStatus.rawValue)")
+                    
+                    // Show selected image
+                    if let image = selectedImage {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 200, height: 200)
+                    }
+                    
+                    // Button to pick an image
+                    Button("Select Image") {
+                        // If you want to request permission first if .notDetermined:
+                        let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
+                        if status == .notDetermined {
+                            PHPhotoLibrary.requestAuthorization(for: .readWrite) { newStatus in
+                                DispatchQueue.main.async {
+                                    authStatus = newStatus
+                                    if newStatus == .authorized || newStatus == .limited {
+                                        showLegacyPicker = true
+                                    } else {
+                                        print("User denied Photo Library access.")
+                                    }
+                                }
+                            }
+                        }
+                        else if status == .authorized || status == .limited {
+                            // Already have permission, just show the picker
+                            showLegacyPicker = true
+                        } else {
+                            print("No photo library access. Prompt user to enable in Settings.")
+                        }
+                    }
                     .padding()
-                    .background(Color.gray.opacity(0.1))
-                    .cornerRadius(10)
-                TextField("Date Taken", text: $dateString)
-                    .padding()
-                    .background(Color.gray.opacity(0.1))
-                    .cornerRadius(10)
-            }
-            .padding(.horizontal)
-
-            // Upload button
-            Button(action: {
-                guard let image = selectedImage else {
-                    print("No image selected, cannot upload.")
-                    return
-                }
-                uploadPost(
-                    image: image,
-                    caption: caption,
-                    userEmail: userEmail,
-                    location: locationString,
-                    dateTaken: dateString
-                )
-            }) {
-                Text("Upload Post")
-                    .padding()
-                    .background(Color.green)
+                    .background(Color.blue)
                     .foregroundColor(.white)
                     .cornerRadius(10)
+                    
+                    // Editable caption
+                    TextField("Add a caption...", text: $caption)
+                        .padding()
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(10)
+                        .padding(.horizontal)
+                    
+                    // Display or edit the auto‐filled metadata
+                    VStack(alignment: .leading) {
+                        Text("Image Metadata")
+                            .font(.headline)
+                        TextField("Location", text: $locationString)
+                            .padding()
+                            .background(Color.gray.opacity(0.1))
+                            .cornerRadius(10)
+                        TextField("Date Taken", text: $dateString)
+                            .padding()
+                            .background(Color.gray.opacity(0.1))
+                            .cornerRadius(10)
+                    }
+                    .padding(.horizontal)
+                    
+                    // Upload button
+                    Button(action: {
+                        guard let image = selectedImage else {
+                            print("No image selected, cannot upload.")
+                            return
+                        }
+                        uploadPost(
+                            image: image,
+                            caption: caption,
+                            userUUID: userUUID,
+                            location: locationString,
+                            dateTaken: dateString
+                        )
+                    }) {
+                        Text("Upload Post")
+                            .padding()
+                            .background(Color.green)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+                    .padding()
+                }
+                // Present the legacy UIImagePickerController as a sheet
+                .sheet(isPresented: $showLegacyPicker) {
+                    LegacyImagePicker(
+                        selectedImage: $selectedImage,
+                        location: $locationString,
+                        dateTaken: $dateString
+                    )
+                }
             }
-            .padding()
-        }
-        // Present the legacy UIImagePickerController as a sheet
-        .sheet(isPresented: $showLegacyPicker) {
-            LegacyImagePicker(
-                selectedImage: $selectedImage,
-                location: $locationString,
-                dateTaken: $dateString
-            )
         }
     }
     
     // Your original upload function
-    func uploadPost(image: UIImage, caption: String, userEmail: String,
+    func uploadPost(image: UIImage, caption: String, userUUID: String,
                     location: String, dateTaken: String) {
         guard let url = URL(string: "http://127.0.0.1:8000/api/upload-post/") else { return }
         
@@ -144,10 +174,11 @@ struct CreatePostView: View {
         data.append("Content-Disposition: form-data; name=\"date_taken\"\r\n\r\n".data(using: .utf8)!)
         data.append("\(dateTaken)\r\n".data(using: .utf8)!)
 
-        // Add the user email
+        // User UUID
         data.append("--\(boundary)\r\n".data(using: .utf8)!)
-        data.append("Content-Disposition: form-data; name=\"email\"\r\n\r\n".data(using: .utf8)!)
-        data.append("\(userEmail)\r\n".data(using: .utf8)!)
+        data.append("Content-Disposition: form-data; name=\"uuid\"\r\n\r\n".data(using: .utf8)!)
+        data.append("\(userUUID)\r\n".data(using: .utf8)!)
+
 
         // End boundary
         data.append("--\(boundary)--\r\n".data(using: .utf8)!)

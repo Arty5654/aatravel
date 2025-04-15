@@ -37,6 +37,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+AUTH_USER_MODEL = 'api.Account'
+
 
 
 
@@ -161,10 +163,15 @@ SITE_ID = 1
 GOOGLE_CLIENT_ID = config('GOOGLE_CLIENT_ID')
 
 
-AUTHENTICATION_BACKENDS = (
+# AUTHENTICATION_BACKENDS = (
+#     'django.contrib.auth.backends.ModelBackend',
+#     'allauth.account.auth_backends.AuthenticationBackend',
+# )
+
+AUTHENTICATION_BACKENDS = [
+    'api.authentication.EmailOrUsernameModelBackend',
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
-)
+]
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'

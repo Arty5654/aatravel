@@ -10,6 +10,7 @@ import Foundation
 struct Account: Codable, Hashable {
     var uuid: String
     var email: String
+    var username: String
     //var password: String
     var created_at: String
     let profile_picture_url: String?

@@ -10,6 +10,7 @@ import GoogleSignIn
 struct RegisterView: View {
     @State private var uuid: String = ""
     @State private var email: String = ""
+    @State private var username: String = ""
     @State private var password: String = ""
     @State private var isLogin = false // State to toggle between login and sign-up modes
     @State private var errorMessage: String? // State for showing error messages
@@ -24,7 +25,7 @@ struct RegisterView: View {
             
             VStack(alignment: .leading) {
                 HStack {
-                    TextField("Email", text: $email)
+                    TextField("Email or Username", text: $email)
                         .keyboardType(.emailAddress)
                         .autocapitalization(.none)
                     Spacer()
@@ -34,6 +35,14 @@ struct RegisterView: View {
                     RoundedRectangle(cornerRadius: 10)
                         .stroke(Color.gray, lineWidth: 1)
                 )
+                if !isLogin {
+                    TextField("Username", text: $username)
+                        .padding()
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color.gray, lineWidth: 1)
+                        )
+                }
                 
                 SecureField("Password", text: $password)
                     .padding()
@@ -92,7 +101,7 @@ struct RegisterView: View {
             return
         }
 
-        let newAccount = ["email": email, "password": password]
+        let newAccount = ["email": email, "username": username, "password": password]
 
         guard let encoded = try? JSONSerialization.data(withJSONObject: newAccount) else {
             print("Failed to encode account")
@@ -137,7 +146,7 @@ struct RegisterView: View {
             return
         }
 
-        let loginCredentials = ["email": email, "password": password]
+        let loginCredentials = ["identifier": email, "password": password]
 
         guard let encoded = try? JSONSerialization.data(withJSONObject: loginCredentials) else {
             print("Failed to encode login credentials")
