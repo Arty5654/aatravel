@@ -3,6 +3,12 @@ import Photos
 import UIKit
 import CoreLocation // for reverse geocoding
 
+extension UIImage: @retroactive Identifiable {
+    public var id: UUID {
+        return UUID()
+    }
+}
+
 struct CreatePostView: View {
     // Check if user is logged in
     @EnvironmentObject var session: UserSession
@@ -12,6 +18,7 @@ struct CreatePostView: View {
     var userUUID: String {
         session.userUUID ?? "N/A"
     }
+    
     
     
     @State private var showMultiPicker = false
@@ -27,6 +34,10 @@ struct CreatePostView: View {
     
     // Boolean bc upload happens twice for whatever reason
     @State private var hasUploaded = false
+    
+    // Tagging
+    @State private var activeTaggingImage: UIImage?
+    @State private var taggingTags: [ImageTag] = []
     
     
     // Track Photo Library auth status (for debugging or gating)
@@ -104,7 +115,9 @@ struct CreatePostView: View {
                                                 .scaledToFit()
                                                 .frame(height: 200)
                                                 .cornerRadius(12)
-                                            
+                                                .onTapGesture {
+                                                    activeTaggingImage = item.image
+                                                }
                                             Text("📍 \(item.location)")
                                                 .font(.caption)
                                                 .foregroundColor(.gray)
@@ -145,6 +158,9 @@ struct CreatePostView: View {
                     .padding()
                 }
             }
+        }
+        .sheet(item: $activeTaggingImage) { image in
+            ImageTaggingView(image: image, tags: $taggingTags)
         }
         .background(Color.white.ignoresSafeArea())
     }
